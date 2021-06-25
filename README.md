@@ -1,4 +1,4 @@
-# ZumbiSuvival - Unity
+# Desafio nas Alturas - Unity
 
 Projeto/Jogo2D de exemplo seguindo os cursos da Formação em Unity da Alura.
 
