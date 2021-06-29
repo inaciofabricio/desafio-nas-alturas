@@ -1,35 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class ControlaAviao : MonoBehaviour
+public class ControlaAviaoCoop : MonoBehaviour
 {
     Rigidbody2D fisica;
     [SerializeField]
     private float forca = 10;
-    private Diretor diretor;
     private Vector3 posicaoInicial;
     private bool deveImpusionar;
     private Animator animacao;
+    private AtivarJogarAnimacao ativa;
+    [SerializeField]
+    private UnityEvent aoBater;
+    [SerializeField]
+    private UnityEvent aoPassarPeloObstaculo;
+    [SerializeField]
+    
 
     private void Awake()
     {
         this.fisica = this.GetComponent<Rigidbody2D>();
         this.posicaoInicial = this.transform.position;
         this.animacao = this.GetComponent<Animator>();
-    }
-
-    private void Start()
-    {
-        this.diretor = GameObject.FindObjectOfType<Diretor>();
+        this.ativa = this.GetComponentInChildren<AtivarJogarAnimacao>();
+        
     }
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
-        {
-            this.deveImpusionar = true;
-        }
         this.animacao.SetFloat("VelocidadeY", this.fisica.velocity.y);
     }
 
@@ -38,7 +38,12 @@ public class ControlaAviao : MonoBehaviour
         if (this.deveImpusionar)
         {
             this.Impulsionar();
-        }        
+        }
+    }
+
+    public void DarImpulso()
+    {
+        this.deveImpusionar = true;
     }
 
     void Impulsionar()
@@ -51,12 +56,16 @@ public class ControlaAviao : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         this.fisica.simulated = false;
-        this.diretor.FinalizarJogo();
+        this.aoBater.Invoke();
     }
 
     public void Reiniciar()
     {
-        this.fisica.simulated = true;
-        this.transform.position = posicaoInicial;
+        this.transform.position = posicaoInicial;       
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        this.aoPassarPeloObstaculo.Invoke();
     }
 }

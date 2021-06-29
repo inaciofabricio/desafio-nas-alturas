@@ -11,6 +11,7 @@ public class ControlaObstaculo : MonoBehaviour
     private Vector3 posicaoDoAviao;
     private Pontuacao pontuacao;
     private bool pontuei;
+    private bool parado = false;
 
     private void Awake()
     {
@@ -25,22 +26,27 @@ public class ControlaObstaculo : MonoBehaviour
 
     void Update()
     {
-        this.transform.Translate(Vector3.left * Velocidade.valor * Time.deltaTime);
-
-        if (!this.pontuei && this.transform.position.x < this.posicaoDoAviao.x)
+        if (!this.parado)
         {
-            this.pontuei = true;
-            this.pontuacao.AdicionarPontos();
+            this.transform.Translate(Vector3.left * Velocidade.valor * Time.deltaTime);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Destruir();
+        if (collision.CompareTag("Barreira"))
+        {
+            Destruir();
+        }
     }
 
     public void Destruir()
     {
         GameObject.Destroy(this.gameObject);
+    }
+
+    public void Parar()
+    {
+        this.parado = true;
     }
 }

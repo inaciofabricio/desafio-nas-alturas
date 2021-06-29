@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class ControlaGeradorDeObstaculo : MonoBehaviour
     [SerializeField]
     private GameObject obstaculo;
     private ControleDeDificuldade controleDeDificuldade;
+    private bool parado = false;
 
     private void Awake()
     {
@@ -27,16 +29,29 @@ public class ControlaGeradorDeObstaculo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.cronometro -= Time.deltaTime;
-        if (this.cronometro < 0)
+        if (!this.parado)
         {
-            GerarObstaculo();
-            this.cronometro = Mathf.Lerp(this.tempoParaGerarFacil, this.tempoParaGerarDificil, this.controleDeDificuldade.Dificuldade);
+            this.cronometro -= Time.deltaTime;
+            if (this.cronometro < 0)
+            {
+                GerarObstaculo();
+                this.cronometro = Mathf.Lerp(this.tempoParaGerarFacil, this.tempoParaGerarDificil, this.controleDeDificuldade.Dificuldade);
+            }
         }
     }
 
     void GerarObstaculo()
     {
         GameObject.Instantiate(obstaculo, this.transform.position, Quaternion.identity);
+    }
+
+    public void Parar()
+    {
+        this.parado = true;
+    }
+
+    public void Recomecar()
+    {
+        this.parado = false;
     }
 }
